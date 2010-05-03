@@ -1,0 +1,46 @@
+DataMarshaller
+
+DataMarshaller is an ActiveRecord mixin for serializing data to a "bytea" column.
+
+Installation
+
+Copy this project as a submodule to your own, or simply copy data_marshaller.rb into whatever
+directory you use for libraries / utilities.  Require data_marshaller.rb from your startup
+code (environment.rb or other initializers).
+
+Add the following line to your model:
+
+  marshal <column name or names>
+
+You can then use the following methods to access that column as a hash:
+
+  get_data(key)
+  set_data(  { key => value } )
+  set_data!( { key => value } )   # saves
+
+Note that setting data will not overwrite existing data (see Hash#merge)
+
+
+Example
+
+  add_column :products, :configuration_options, :binary
+
+  class Product
+    marshal :configuration_options
+    ...
+  end
+
+  >> p = Product.create( :name => 'widget', :configuration_options => { :frame => 'aluminum' } )
+
+  >> p.get_configuration_options(:frame)
+  => 'aluminum'
+
+  >> p.set_configuration_options(:face => 'glass')
+  => 'glass'
+
+  >> pp p.configuration_options
+  ==> {:frame=>"aluminum", :face=>"glass"}
+
+
+Copyright © 2010 Michael Stangel, Geni.com; Published under The MIT License, see LICENSE
+
